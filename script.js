@@ -7,7 +7,7 @@ var inputZone = document.getElementById("inputzone");
 var joinGame = document.getElementById('joingame');
 var messageZone = document.getElementById('messagezone');
 var header = document.getElementById('header');
-var games = {};
+var validWords = {};
 
 //Create User per session
 let user = sessionStorage.getItem("user");
@@ -438,4 +438,24 @@ document.getElementById("usernameinput").addEventListener('keyup', function(e) {
 });
 
 
+//load words from txt file
+const reader = new FileReader();
 
+reader.onload = (event) => {
+    const file = event.target.result;
+    const allLines = file.split(/\r\n|\n/);
+    // Reading line by line
+    allLines.forEach((word) => {
+        if (!validWords[word[0]]) {
+            validWords[word[0]] = [];
+        } 
+        validWords[word[0]] = word;
+        console.log(word);
+    });
+};
+
+reader.onerror = (event) => {
+    alert(event.target.error.name);
+};
+
+reader.readAsText(file);
