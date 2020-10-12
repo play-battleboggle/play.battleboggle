@@ -441,24 +441,20 @@ document.getElementById("usernameinput").addEventListener('keyup', function(e) {
 //load words from txt file
 document.getElementById('inputfile') 
             .addEventListener('change', function() { 
-const reader = new FileReader();
-
-reader.onload = (event) => {
-    const file = event.target.result;
-    const allLines = file.split(/\r\n|\n/);
-    // Reading line by line
-    allLines.forEach((word) => {
-        if (!validWords[word[0]]) {
-            validWords[word[0]] = [];
-        } 
-        validWords[word[0]] = word;
-        console.log(word);
-    });
-};
-
-reader.onerror = (event) => {
-    alert(event.target.error.name);
-};
-
-reader.readAsText("data/words.txt");
-}
+              
+            var fr=new FileReader(); 
+            fr.onload=function(){ 
+                const file = event.target.result;
+                    const allLines = file.split(/\r\n|\n/);
+                    // Reading line by line
+                    allLines.forEach((word) => {
+                        if (!validWords[word[0]]) {
+                            validWords[word[0]] = [];
+                        } 
+                        validWords[word[0]] = word;
+                        console.log(word);
+                    });
+            } 
+              
+            fr.readAsText(this.files[0]); 
+        }) 
