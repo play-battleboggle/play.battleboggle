@@ -438,7 +438,7 @@ document.getElementById("usernameinput").addEventListener('keyup', function(e) {
 });
  
 ///
-const fileURL = '/data/words.txt' // provide file location
+const fileURL = 'words.txt'; 
 
 fetch(fileURL)
   .then(response => response.text())
