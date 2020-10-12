@@ -9,19 +9,6 @@ var messageZone = document.getElementById('messagezone');
 var header = document.getElementById('header');
 var games = {};
 
-var firebaseConfig = {
-    apiKey: "AIzaSyDg8hvVYDq00LKJ6xjBRC7awmH-xIB0SMU",
-    authDomain: "battleboggle.firebaseapp.com",
-    databaseURL: "https://battleboggle.firebaseio.com",
-    projectId: "battleboggle",
-    storageBucket: "battleboggle.appspot.com",
-    messagingSenderId: "681048682309",
-    appId: "1:681048682309:web:c46653f8a90b6ee7b8582c",
-    measurementId: "G-9SJ9ETWY86"
-};
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-
 //create a user per session to store their ID and gameID
 let user = sessionStorage.getItem("userID");
 if (!user) {

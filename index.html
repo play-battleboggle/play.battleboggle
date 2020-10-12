@@ -4,9 +4,14 @@
     <head>
         <meta charset="utf-8">
         <link rel="stylesheet" type="text/css" href="style.css"/>
+
+        <script src="https://www.gstatic.com/firebasejs/7.23.0/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.23.0/firebase-analytics.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.23.0/firebase-database.js"></script>
     </head>
 
     <body>
+        <meta charset="utf-8"/>
         <div id="header"> 
             <h1>Battle Boggle</h1>
         </div>
@@ -20,11 +25,22 @@
             
         <div id="messagezone"></div>
 
-        <script src="https://www.gstatic.com/firebasejs/7.23.0/firebase-app.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/7.23.0/firebase-analytics.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/7.23.0/firebase-database.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/7.23.0/firebase-oauth.js"></script>
-
+        
+        <script>
+            var firebaseConfig = {
+              apiKey: "AIzaSyDg8hvVYDq00LKJ6xjBRC7awmH-xIB0SMU",
+              authDomain: "battleboggle.firebaseapp.com",
+              databaseURL: "https://battleboggle.firebaseio.com",
+              projectId: "battleboggle",
+              storageBucket: "battleboggle.appspot.com",
+              messagingSenderId: "681048682309",
+              appId: "1:681048682309:web:c46653f8a90b6ee7b8582c",
+              measurementId: "G-9SJ9ETWY86"
+            };
+            // Initialize Firebase
+            firebase.initializeApp(firebaseConfig);
+            firebase.analytics();
+          </script>
         <script src="script.js"></script>
     </body>
 </html>
