@@ -348,7 +348,7 @@ function shuffleCells(path) { //get new letters and make cells temporarily red
         cell.classList.add("fadeBlinkRed");
       }
       
-      firebase.database().ref("games/" + sessionStorage.getItem("currentGame" + "/board")).set(board);
+      firebase.database().ref("games/" + sessionStorage.getItem("currentGame") + "/board").set(board);
 
       setTimeout(function() {
         for (var i = 0; i < path.length; i++) {
