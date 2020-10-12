@@ -12,10 +12,9 @@ var games = {};
 //Create User per session
 let user = sessionStorage.getItem("user");
 if (!user) {
-    user = {"id":Math.floor(10000000*Math.random()),
-          "name":null,
-            "currentGame":null};
-  sessionStorage.setItem("user",user);
+    sessionStorage.setItem("user","default");
+    sessionStorage.setItem("userID",Math.floor(10000000*Math.random()))
+    sessionStorage.setItem("currentGame",0)
 }
 
 //FIREBASE CODE AND FUNCTIONS
@@ -114,7 +113,7 @@ function loadGame(gameCode) {
         gameCode = createGame();
     }
 
-    sessionStorage.setItem("user/currentGame", gameCode);
+    sessionStorage.setItem("currentGame", gameCode);
 
     //retrieve game snapshot from db and perform actions
     var gamesRef = firebase.database().ref("games/" + gameCode);
@@ -148,7 +147,10 @@ function loadGame(gameCode) {
     });
     inputZone.appendChild(input);
 
-    gamesRef.child("users").push().set(sessionStorage.getItem("user"));
+    gamesRef.child("users").push().set({
+        user: sessionStorage.getItem("user"),
+        id: sessionStorage.getItem("uuid")
+    });
 }
 
 function displayGameCode(gameCode) {
@@ -193,7 +195,7 @@ firebase.database().ref("games/{foo}/messages").on("child_added", function(snaps
 });
 
 function addFoundWordMessage(word, score) {
-    var messagesRef = firebase.database().ref("games/" + sessionStorage.getItem("user")["currentGame"] + "/messages");
+    var messagesRef = firebase.database().ref("games/" + sessionStorage.getItem("currentGame") + "/messages");
     messagesRef.push().set({
         "msg": `${word} was found for ${score} points`
     })
@@ -213,10 +215,10 @@ function checkWordExists(word) {
   //check if word is in boggleboard
   //if so, track the cells it is in an return them in "path"
   var cellMap = {};
-  var gameRef = firebase.database().ref("games/" + sessionStorage.getItem("user")["currentGame"]);
+  var gameRef = firebase.database().ref("games/" + sessionStorage.getItem("currentGame"));
 
   return gameRef.once("value").then(function(snapshot) {
-      console.log(sessionStorage.getItem("user")["currentGame"]);
+      console.log(sessionStorage.getItem("currentGame"));
       console.log(sessionStorage.getItem("user"));
     var board = snapshot.child("board").val();
     console.log(board);
@@ -330,7 +332,7 @@ function isNextTo(r1,c1,r2,c2) { //uses euclidean distance to determine if (r1,c
   
 function shuffleCells(path) { //get new letters and make cells temporarily red
   
-  firebase.database().ref("games/" + sessionStorage.getItem("user")["currentGame"]).child("board").once("value").then(function(snapshot) {
+  firebase.database().ref("games/" + sessionStorage.getItem("currentGame")).child("board").once("value").then(function(snapshot) {
     var r,c;
     var board = snapshot.val();
 
@@ -348,7 +350,7 @@ function shuffleCells(path) { //get new letters and make cells temporarily red
         cell.classList.add("fadeBlinkRed");
       }
       
-      firebase.database().ref("games/" + sessionStorage.getItem("user")["currentGame"])["board"].set(board);
+      firebase.database().ref("games/" + sessionStorage.getItem("currentGame"))["board"].set(board);
 
       setTimeout(function() {
         for (var i = 0; i < path.length; i++) {
@@ -397,7 +399,7 @@ document.getElementById("usernameinput").addEventListener('keyup', function(e) {
     if (e.key === "Enter") {
         var username = this.value;
         //check for curse words???
-        sessionStorage.getItem("user")["name"] = username;
+        sessionStorage.setItem("user",username);
         
         //hide stuff and show stuff
         document.getElementById("usernameinput").classList.add("hidden");
