@@ -102,7 +102,7 @@ function createScoringLog(messagesRef) {
         scoringLog.appendChild(newGameMessage);
     }
 
-    messageZone.appendChild(scoringLog);
+    document.getElementById("c1").appendChild(scoringLog);
 }
 
 function createScoringMessageElement(msg) {
@@ -124,7 +124,7 @@ function loadGame(gameCode) {
          //LOAD EVERYTHING!!!
         createDisplayBoard(snapshot.child("board").val());
         createScoringLog(snapshot.child("messages") || null);
-        //createLeaderboard(snapshot.child("users"));
+        loadLeaderBoard(snapshot.child("users"));
     }); 
     displayGameCode(gameCode);
 
@@ -145,12 +145,16 @@ function loadGame(gameCode) {
                 var path = checkWordExists(word, snapshot.child("board").val());
                 if (isValidWord(word) && path.length != 0) {
                     shuffleCells(path);
+                    //increment score for user
                     let score = scoreWord(word);
+                    firebase.database().ref("games/" + sessionStorage.getItem("currentGame") + "/users" + sessionStorage.getItem("user")).set(firebase.database.ServerValue.increment(score));
                     //add message
                     addFoundWordMessage(word,score);
-                    sessionStorage.setItem("score", score + sessionStorage.getItem("score"));
+                    loadLeaderBoard(snapshot.child("users"));
                 }
             });
+
+            
         }
     });
     inputZone.appendChild(input);
@@ -163,6 +167,29 @@ function loadGame(gameCode) {
 
     gamesRef.child("users").push().set(userEntry);
 }
+
+
+function loadLeaderBoard(usersRef) {
+    var query = firebase.database().ref("games/" + sessionStorage.getItem("currentGame") + "/users").orderByKey();
+
+    document.getElementById("c2").innerHTML = "";
+
+    var leaderboard = document.createElement("li");
+
+    query.once("value").then(function(snapshot) {
+        snapshot.forEach(function(childSnapshot) {
+            var key = childSnapshot.key;
+            var score = childSnapshot.val()["score"];
+
+            var newMsg = document.createElement("li");
+            newMsg.innerHTML = `${key}: ${score} pts`;
+            leaderboard.appendChild(newMsg);
+        });
+    });
+    document.getElementById("c2").appendChild(leaderboard);
+}
+
+
 
 function displayGameCode(gameCode) {
   var gameCodeLabel = document.createElement("h2");
@@ -199,12 +226,6 @@ function scoreWord(word) {
 function isValidWord(word) {
   return true;
 }
-
-
-firebase.database().ref("games/{foo}/messages").on("child_added", function(snapshot, prevChildKey) {
-    console.log("MSG ADDED")
-    scoringLog.appendChild(createScoringMessageElement(snapShot.val()));
-});
 
 function addFoundWordMessage(word, score) {
     var messagesRef = firebase.database().ref("games/" + sessionStorage.getItem("currentGame") + "/messages");

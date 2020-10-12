@@ -91,3 +91,17 @@ table {
   #leaderboard {
       float: left
   }
+
+  .container {
+      width: 400px;
+      height: 400px;
+      border: 1px solid black
+  }
+
+  #c1 {
+    float: left
+  }
+
+  #c2 {
+      float:right 
+  }
