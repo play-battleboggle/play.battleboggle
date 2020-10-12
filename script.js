@@ -208,7 +208,7 @@ firebase.database().ref("games/{foo}/messages").on("child_added", function(snaps
 
 function addFoundWordMessage(word, score) {
     var messagesRef = firebase.database().ref("games/" + sessionStorage.getItem("currentGame") + "/messages");
-    messagesRef.on("child_added", function(snapshot, prevChildKey) {
+    messagesRef.on("child_added", function(snapShot, prevChildKey) {
         console.log("MSG ADDED");
         scoringLog.appendChild(createScoringMessageElement(snapShot.val()));
     });
