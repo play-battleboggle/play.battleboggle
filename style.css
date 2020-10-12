@@ -5,7 +5,7 @@ table {
   }
   
   ul {
-    boder-style: solid;
+    border-style: solid;
     border: 1px solid #000;
     padding: 20px;
     margin-left: auto;
@@ -74,4 +74,8 @@ table {
       background-image:none !important; 
            -o-animation: fadeIt 2s ease-in-out; 
               animation: fadeIt 2s ease-in-out; 
+  }
+
+  .hidden {
+      display: none
   }

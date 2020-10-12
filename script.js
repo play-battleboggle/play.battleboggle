@@ -9,14 +9,32 @@ var messageZone = document.getElementById('messagezone');
 var header = document.getElementById('header');
 var games = {};
 
-//create a user per session to store their ID and gameID
-let user = sessionStorage.getItem("userID");
+//Create User per session
+let user = sessionStorage.getItem("user");
 if (!user) {
-  user = {"id":Math.floor(10000000*Math.random()),
-          "gameID":null};
+    user = {"id":Math.floor(10000000*Math.random()),
+          "name":null,
+            "currentGame":null};
   sessionStorage.setItem("user",user);
 }
 
+//FIREBASE CODE AND FUNCTIONS
+function createGame() {
+    var gameCode;
+    do {
+      gameCode = new Array(5).fill().map(() => getNewLetter()).join().replace(/,/gi,"");
+    } while (games.gameID);
+    
+    firebase.database().ref('games/' + gameCode).set({
+        board: createBoard(),
+        currentUsers: null,
+        messages: null,
+        id: Math.floor(Math.random() * 100000000),
+        max_lobby: 5
+    });
+        
+    return gameCode;
+}
 
 
 function getNewLetter() {
@@ -46,12 +64,11 @@ function createBoard(game) {
   return board;
 }
 
-function createDisplayBoard() {
+function createDisplayBoard(board) {
   //create html board
   var displayBoard = document.createElement("table");
   var body = document.createElement("tbody");
-    
-  var board = game["board"];
+
   for (var i = 0; i < rows; i++) {
     var row = document.createElement("tr");
     
@@ -69,84 +86,77 @@ function createDisplayBoard() {
   displayZone.appendChild(displayBoard);
 }
 
-function createScoringLog() {
-  scoringLog = document.createElement("ul");
-  scoringLog.id = "scoringlog";
-  
-  
-  if (game["messages"].length) {
-    for (let msg in game["messages"]) {
-      var newMsg = document.createElement("li");
-      newMsg.innerHTML = msg;
-      scoringLog.appendChild(document.createElement("li"));
+function createScoringLog(messagesRef) {
+    scoringLog = document.createElement("ul");
+    scoringLog.id = "scoringlog";
+    
+    var counter = 0;
+    if (messagesRef) {
+        messagesRef.forEach(function(childSnapshot) {
+                scoringLog.appendChild(createScoringMessageElement(childSnapshot.val()));
+                counter++;
+        });
+    } else {
+        var newGameMessage = document.createElement("li");
+        newGameMessage.innerHTML = "NEW BOGGLE GAME STARTED! 60 SECONDS REMAIN!";
+        scoringLog.appendChild(newGameMessage);
     }
-  } else {
-    var newGameMessage = document.createElement("li");
-    newGameMessage.innerHTML = "NEW BOGGLE GAME STARTED! 60 SECONDS REMAIN!";
-    scoringLog.appendChild(newGameMessage);
-  }  
 
-  messageZone.appendChild(scoringLog);
+    messageZone.appendChild(scoringLog);
+}
+
+function createScoringMessageElement(msg) {
+    var newMsg = document.createElement("li");
+    newMsg.innerHTML = msg;
+    return document.createElement("li");
 }
 
 function loadGame(gameCode) {
-  if (gameCode instanceof String) { //if gameCode is passed
-    game = games[gameCode]
-  } else { //no gamecode is passed
-    game = games[gameCode = createNewGame()];    
-  }
-  
-  createDisplayBoard();
-  createScoringLog();
-  displayGameCode(gameCode);
- 
-  
-  //hide start button and create input field
-  joinGame.style.display = "none";
-  startGame.style.display = "none";
-  input = document.createElement("input");
-  input.id = "input";
-  input.addEventListener('keyup', function (e) {
-    if (e.key === 'Enter') {
-      console.log(this.value);
-      var word = this.value.toUpperCase();
-      word = word.replace(/\s+/g, '');
-      this.value = "";
-      var path = checkWordExists(word);
-      console.log(path, word);
-      if (isValidWord(word) && path.length != 0) {
-        shuffleCells(path);
-        let score = scoreWord(word);
-        addFoundWordMessage(word,score);
-        
-      }
+    if (!(gameCode instanceof String)) { //gamecode either blank (startgame) or already checked for validity (joingame)
+        gameCode = createNewGame();
     }
-  });
-  inputZone.appendChild(input);
-} 
+
+    sessionStorage.getItem("user")["currentGame"] = gameCode;
+
+    //retrieve game snapshot from db and perform actions
+    var gamesRef = firebase.database().ref("games/" + gameCode);
+    gamesRef.once("value").then(function(snapshot) {
+         //LOAD EVERYTHING!!!
+        createDisplayBoard(snapshot.child("board").val);
+        createScoringLog(snapshot.child("messages"));
+    }); 
+    displayGameCode(gameCode);
+
+    //hide start button and create input field
+    joinGame.style.display = "none";
+    startGame.style.display = "none";
+    
+    //create input listener for user guesses
+    input = document.createElement("input");
+    input.id = "input";
+    input.addEventListener('keyup', function (e) {
+        if (e.key === 'Enter') {
+            var word = this.value.toUpperCase();
+            word = word.replace(/\s+/g, '');
+            this.value = "";
+            var path = checkWordExists(word);
+            if (isValidWord(word) && path.length != 0) {
+                shuffleCells(path);
+                let score = scoreWord(word);
+                addFoundWordMessage(word,score);
+            
+            }
+        }
+    });
+    inputZone.appendChild(input);
+
+    gamesRef.child("users").push().set(sessionStorage.getItem("user"));
+}
 
 function displayGameCode(gameCode) {
   var gameCodeLabel = document.createElement("h2");
   gameCodeLabel.innerHTML = `Game Code: ${gameCode}`;
   header.appendChild(gameCodeLabel);  
-}
-
-//create a new game object
-function createNewGame() {
-  var gameCode;
-  do {
-    gameCode = new Array(5).fill().map(() => getNewLetter()).join().replace(/,/gi,"");
-  } while (games.gameID);
-  
-  games[gameCode] = {
-    "board": createBoard(),
-    "users": new Array(),
-    "messages": new Array(),
-    "id": Math.floor(Math.random() * 100000000),
-    "max lobby": 5
-  };  
-  
-  return gameCode;
 }
 
 function scoreWord(word) {
@@ -179,7 +189,25 @@ function isValidWord(word) {
   return true;
 }
 
+
+firebase.database().ref("games/{foo}/messages").on("child_added", function(snapshot, prevChildKey) {
+    scoringLog.appendChild(createScoringMessageElement(snapShot.val()));
+});
+
+ref.on("child_added", function(snapshot, prevChildKey) {
+    var newPost = snapshot.val();
+    console.log("Author: " + newPost.author);
+    console.log("Title: " + newPost.title);
+    console.log("Previous Post ID: " + prevChildKey);
+  });
+
+
 function addFoundWordMessage(word, score) {
+    var messagesRef = firebase.database().ref("games/" + sessionStorage.getItem("user")["currentGame"] + "/messages");
+    messagesRef.push().set({
+        "msg": `${word} was found for ${score} points`
+    })
+
   var newMsg = document.createElement("li");
   newMsg.innerHTML = `${word} was found for ${score} points`;
   
@@ -189,7 +217,7 @@ function addFoundWordMessage(word, score) {
     msgs = msgs.slice(1,11);
   }
 
-}
+} 
 
 function checkWordExists(word) {
   //check if word is in boggleboard
@@ -303,63 +331,83 @@ function isNextTo(r1,c1,r2,c2) { //uses euclidean distance to determine if (r1,c
 }
   
 function shuffleCells(path) { //get new letters and make cells temporarily red
-  var r,c;
-  var board = game["board"];
   
-  for (var i = 0; i < path.length; i++) {
-    [r,c] = path[i];
-    console.log("CELL CHANGING: " + r + " " + c + " " + board[r][c]);
-    
-    board[r][c] = getNewLetter();
-    
-    var cellID = "cell" + (r * rows + c);
-    console.log(cellID);
-    var cell = document.getElementById(cellID);
-    cell.innerHTML = board[r][c];
-    
-    cell.classList.add("fadeBlinkRed");
-  }
-  
-  setTimeout(function() {
+  firebase.database().ref("games/" + sessionStorage.getItem("user")["currentGame"]).child("board").once("value").then(function(snapshot) {
+    var r,c;
+    var board = snapshot.val();
+
     for (var i = 0; i < path.length; i++) {
-      [r,c] = path[i];
-      var cellID = "cell" + (r * rows + c);
-      document.getElementById(cellID).classList.remove("fadeBlinkRed");
-    }
-  }, 2800);
+        [r,c] = path[i];
+        console.log("CELL CHANGING: " + r + " " + c + " " + board[r][c]);
+        
+        board[r][c] = getNewLetter();
+        
+        var cellID = "cell" + (r * rows + c);
+        console.log(cellID);
+        var cell = document.getElementById(cellID);
+        cell.innerHTML = board[r][c];
+        
+        cell.classList.add("fadeBlinkRed");
+      }
+      
+      firebase.database().ref("games/" + sessionStorage.getItem("user")["currentGame"])["board"].set(board);
+
+      setTimeout(function() {
+        for (var i = 0; i < path.length; i++) {
+          [r,c] = path[i];
+          var cellID = "cell" + (r * rows + c);
+          document.getElementById(cellID).classList.remove("fadeBlinkRed");
+        }
+      }, 2800);
+  });
+
+  
 }
 
 startGame.addEventListener('click', loadGame);
 joinGame.addEventListener('click', function(button) {
-  startGame.style.display = "none";
-  joinGame.style.display = "none";
-  /*
-  let backButton = document.createElement("button");
-  backButton.addEventListener('click', function() {
-    location.reload();
-  });
-  inputZone.appendChild(backButton);*/
+    //hide start/join buttons
+    startGame.classList.add("hidden");
+    joinGame.classList.add("hidden");
   
+    //create user input button for Game ID
   let joinGameInput = document.createElement("input");
   
   joinGameInput.id = "joinGameInputCode";
   joinGameInput.placeholder = "Enter 5-Letter Game Code";
   joinGameInput.addEventListener('keyup', function (e) {
     if (e.key === 'Enter') {
-      if (games[this.value.toUpperCase()]) { //if code is valid
-        joinGameInput.style.display = "none";
-        loadGame(this.value.toUpperCase());
-      } else {
-        joinGameInput.value = "";
-        joinGameInput.placeholder = "Game does not exist. Try again!";
-      }
-        
+        var inputCode = this.value.toUpperCase();
+        var gamesRef = firebase.database().ref("games/");
+        gamesRef.once("value").then(function(snapshot) {
+            if (snapshot.child(inputCode).exists()) {
+                joinGameInput.classList.add("hidden");
+                loadGame(inputCode);
+            } else {
+                joinGameInput.value = "";
+                joinGameInput.placeholder = "Game does not exist. Try again!";
+            }
+        });
     }
   });
   inputZone.appendChild(joinGameInput);
 });
 
 alert("IS WORKING");
+
+document.getElementById("usernameinput").addEventListener('keyup', function(e) {
+    if (e.key === "Enter") {
+        var username = this.value;
+        //check for curse words???
+        sessionStorage.getItem("user")["name"] = username;
+        
+        //hide stuff and show stuff
+        document.getElementById("usernameinput").classList.add("hidden");
+        startGame.classList.removeClass("hidden");
+        joinGame.classList.removeClass("hidden");
+    }
+});
+
 
 
 
