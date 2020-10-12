@@ -114,7 +114,7 @@ function loadGame(gameCode) {
         gameCode = createGame();
     }
 
-    sessionStorage.getItem("user")["currentGame"] = gameCode;
+    sessionStorage.setItem("user/currentGame", gameCode);
 
     //retrieve game snapshot from db and perform actions
     var gamesRef = firebase.database().ref("games/" + gameCode);
@@ -214,6 +214,7 @@ function checkWordExists(word) {
   //if so, track the cells it is in an return them in "path"
   var cellMap = {};
   var gameRef = firebase.database().ref("games/" + sessionStorage.getItem("user")["currentGame"]);
+
   return gameRef.once("value").then(function(snapshot) {
       console.log(sessionStorage.getItem("user")["currentGame"]);
       console.log(sessionStorage.getItem("user"));
