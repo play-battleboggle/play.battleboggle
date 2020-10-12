@@ -451,7 +451,7 @@ document.getElementById('inputfile')
                     allLines.forEach((word) => {
                         if (word.length >= 3 && word.length <= 12) {
                             if (!validWords[word.slice(0,3)]) {
-                                validWords[word.slice(0,3)] = {};
+                                validWords[word.slice(0,3)] = [];
                             } 
 
                             validWords[word.slice(0,3)].push(word);
