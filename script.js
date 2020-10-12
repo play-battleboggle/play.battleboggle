@@ -137,13 +137,10 @@ function loadGame(gameCode) {
     displayGameCode(gameCode);
 
     //save user as game player
-    var userEntry = {};
-    userEntry[sessionStorage.getItem("user")] = {
+    gamesRef.child("users").child(sessionStorage.getItem("user")).set({
         id: sessionStorage.getItem("uuid"),
         score: 0,
-    };
-
-    gamesRef.child("users").push().set(userEntry);
+    });
     //hide start button and create input field
     joinGame.style.display = "none";
     startGame.style.display = "none";
@@ -163,7 +160,7 @@ function loadGame(gameCode) {
                     shuffleCells(path);
                     //increment score for user
                     let score = scoreWord(word);
-                    firebase.database().ref("games/" + sessionStorage.getItem("currentGame") + "/users" + sessionStorage.getItem("user")).set(firebase.database.ServerValue.increment(score));
+                    firebase.database().ref("games/" + sessionStorage.getItem("currentGame") + "/users/{}/" + sessionStorage.getItem("user")).set(firebase.database.ServerValue.increment(score));
                     //add message
                     addFoundWordMessage(word,score);
                     loadLeaderBoard(snapshot.child("users"));
