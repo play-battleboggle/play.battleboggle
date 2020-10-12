@@ -105,7 +105,7 @@ function createScoringLog(messagesRef) {
 function createScoringMessageElement(msg) {
     var newMsg = document.createElement("li");
     newMsg.innerHTML = msg;
-    return document.createElement("li");
+    return newMsg;
 }
 
 function loadGame(gameCode) {
@@ -140,7 +140,6 @@ function loadGame(gameCode) {
             var gameRef = firebase.database().ref("games/" + sessionStorage.getItem("currentGame"));
             gameRef.once("value").then(function(snapshot) {
                 var path = checkWordExists(word, snapshot.child("board").val());
-                printPath(path);
                 if (isValidWord(word) && path.length != 0) {
                     shuffleCells(path);
                     let score = scoreWord(word);
@@ -262,7 +261,6 @@ function checkWordExists(word, board) {
             break;
         }
     }
-    printPath(path);
     return path;  
 }
 
@@ -294,8 +292,6 @@ function checkWordExists_helper(word, cellMap, path, letterIndex) {
   return path;
   
 }
-
-
 
 function printPath(path) {
   console.log("PATH PRINT: [")
@@ -337,12 +333,11 @@ function shuffleCells(path) { //get new letters and make cells temporarily red
 
     for (var i = 0; i < path.length; i++) {
         [r,c] = path[i];
-        console.log("CELL CHANGING: " + r + " " + c + " " + board[r][c]);
         
         board[r][c] = getNewLetter();
         
         var cellID = "cell" + (r * rows + c);
-        console.log(cellID);
+
         var cell = document.getElementById(cellID);
         cell.innerHTML = board[r][c];
         
@@ -391,8 +386,6 @@ joinGame.addEventListener('click', function(button) {
   });
   inputZone.appendChild(joinGameInput);
 });
-
-alert("IS WORKING");
 
 document.getElementById("usernameinput").addEventListener('keyup', function(e) {
     if (e.key === "Enter") {
