@@ -180,7 +180,7 @@ function loadLeaderBoard(usersRef) {
 
     query.once("value").then(function(snapshot) {
         snapshot.forEach(function(childSnapshot) {
-            var username = childSnapshot.val();
+            var username = childSnapshot.val().key;
             var score = childSnapshot.val()["score"];
 
             var newMsg = document.createElement("li");
