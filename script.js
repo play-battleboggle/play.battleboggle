@@ -13,8 +13,11 @@ var games = {};
 let user = sessionStorage.getItem("user");
 if (!user) {
     sessionStorage.setItem("user","default");
-    sessionStorage.setItem("userID",Math.floor(10000000*Math.random()))
-    sessionStorage.setItem("currentGame",0)
+    sessionStorage.setItem("userID",Math.floor(10000000*Math.random()));
+    sessionStorage.setItem("currentGame",0);
+    sessionStorage.setItem("score",0);
+} else {
+    user = sessionStorage.getItem("user");
 }
 
 //FIREBASE CODE AND FUNCTIONS
@@ -145,10 +148,7 @@ function loadGame(gameCode) {
                     let score = scoreWord(word);
                     //add message
                     addFoundWordMessage(word,score);
-                    //increment user score
-                    snapshot.child("users/" + sessionStorage.getItem("user")).set({
-                        score: snapshot.child("users/" + sessionStorage.getItem("user") + "/score") + score}
-                    );
+                    sesssionStorage.setItem("score", score + sessionStorage.getItem("score"));
                 }
             });
         }
@@ -208,6 +208,10 @@ firebase.database().ref("games/{foo}/messages").on("child_added", function(snaps
 
 function addFoundWordMessage(word, score) {
     var messagesRef = firebase.database().ref("games/" + sessionStorage.getItem("currentGame") + "/messages");
+    messagesRef.on("child_added", function(snapshot, prevChildKey) {
+        console.log("MSG ADDED");
+        scoringLog.appendChild(createScoringMessageElement(snapShot.val()));
+    });
     messagesRef.push().set({
         "msg": `${sessionStorage.getItem("user")} found ${word} for ${score} points`
     })
