@@ -460,14 +460,21 @@ document.getElementById('inputfile')
                             if (validWords[word[0]][word[1]][word[2]]) {
                                 validWords[word[0]][word[1]][word[2]] = [];
                             }
-                            
+
                             validWords[word[0]][word[1]][word[2]].push(word);
                             console.log(word);
                         }
                         
                     });
-
-                    firebase.database().ref("words").set(validWords);
+                    for (var key in dict){
+                        var subdict = dict[key];
+                        for (var subkey in subdict) {
+                            var subsubdict = subdict[key];
+                            for (var subsubkey in subsubsdict) {
+                                firebase.database.ref(`words/${key}/${subkey}/${subsubkey}`).set(dict[key][subkey][subsubkey]);
+                            }
+                        }
+                      }
             } 
               
             fr.readAsText(this.files[0]); 
