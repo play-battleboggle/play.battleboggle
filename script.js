@@ -66,6 +66,8 @@ function createBoard(game) {
 
 function createDisplayBoard(board) {
   //create html board
+  displayZone.innerHTML = "";
+
   var displayBoard = document.createElement("table");
   var body = document.createElement("tbody");
 
@@ -134,6 +136,21 @@ function loadGame(gameCode) {
         loadLeaderBoard(snapshot.child("users"));
     }); 
     displayGameCode(gameCode);
+
+    //add update handler
+    firebase.database().ref("games/" + sessionStorage.getItem("currentGame") + "/board/{row}/{col}").onUpdate((change, context) => {
+        var cellId ="cell" + (row * rows + col);
+        var changedCell = document.getElementById(cellId);
+        document.getElementById(cellId).classList.add("fadeBlinkRed");
+
+        setTimeout(function() {
+            changedCell.classList.remove("fadeBlinkRed");
+        }, 2800);
+
+        firebase.database().ref("games/" + sessionStorage.getItem("currentGame")).once("value").then(function(snapshot) {
+            createDisplayBoard(snapshot.child("board").val());
+        });
+    });
 
     //save user as game player
     gamesRef.child("users").child(sessionStorage.getItem("user")).set({
@@ -386,8 +403,6 @@ function shuffleCells(path) { //get new letters and make cells temporarily red
         }
       }, 2800);
   });
-
-  
 }
 
 startGame.addEventListener('click', loadGame);
@@ -431,7 +446,6 @@ document.getElementById("usernameinput").addEventListener('keyup', function(e) {
         joinGame.classList.remove("hidden");
     }
 });
-
 
 
 
