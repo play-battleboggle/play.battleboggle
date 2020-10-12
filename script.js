@@ -213,8 +213,12 @@ function checkWordExists(word) {
   //check if word is in boggleboard
   //if so, track the cells it is in an return them in "path"
   var cellMap = {};
-  var board = firebase.database().ref("games/" + sessionStorage.getItem("user")["currentGame"] + "/board").val();
-  
+  var gameRef = firebase.database().ref("games/" + sessionStorage.getItem("user")["currentGame"]);
+  var board;
+  gameRef.once("value").then(function(snapshot) {
+    board = snapshot.child("board").val();
+  }); 
+
   //remove duplicates from word or else cellMap gets populated per instance in board
   var uniqueLetters = new Set();
   for (let letter of word) {
