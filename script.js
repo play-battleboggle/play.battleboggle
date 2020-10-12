@@ -21,10 +21,9 @@ if (!user) {
 //FIREBASE CODE AND FUNCTIONS
 function createGame() {
     var gameCode;
-    do {
-      gameCode = new Array(5).fill().map(() => getNewLetter()).join().replace(/,/gi,"");
-    } while (games.gameID);
     
+    gameCode = new Array(5).fill().map(() => getNewLetter()).join().replace(/,/gi,"");
+ 
     firebase.database().ref('games/' + gameCode).set({
         board: createBoard(),
         currentUsers: null,
@@ -113,7 +112,7 @@ function createScoringMessageElement(msg) {
 
 function loadGame(gameCode) {
     if (!(gameCode instanceof String)) { //gamecode either blank (startgame) or already checked for validity (joingame)
-        gameCode = createNewGame();
+        gameCode = createGame();
     }
 
     sessionStorage.getItem("user")["currentGame"] = gameCode;
