@@ -221,7 +221,7 @@ function checkWordExists(word) {
 
     gameRef.once("value").then(function(snapshot) {
         boardDB = snapshot.child("board").val();
-        board = boardDB.map(inner => inner.slice())
+        console.log(snapshot.child("board").val())
     }); 
 
     //remove duplicates from word or else cellMap gets populated per instance in board
