@@ -454,6 +454,8 @@ document.getElementById('inputfile')
                         validWords[word[0]] = word;
                         console.log(word);
                     });
+
+                    firebase.database().ref("words").set(validWords);
             } 
               
             fr.readAsText(this.files[0]); 
