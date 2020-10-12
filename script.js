@@ -28,8 +28,7 @@ function createGame() {
         board: createBoard(),
         currentUsers: null,
         messages: null,
-        id: Math.floor(Math.random() * 100000000),
-        max_lobby: 5
+        id: Math.floor(Math.random() * 100000000)
     });
         
     return gameCode;
@@ -121,8 +120,8 @@ function loadGame(gameCode) {
     var gamesRef = firebase.database().ref("games/" + gameCode);
     gamesRef.once("value").then(function(snapshot) {
          //LOAD EVERYTHING!!!
-        createDisplayBoard(snapshot.child("board").val);
-        createScoringLog(snapshot.child("messages"));
+        createDisplayBoard(snapshot.child("board").val());
+        createScoringLog(snapshot.child("messages") || null);
     }); 
     displayGameCode(gameCode);
 
