@@ -120,8 +120,10 @@ function createScoringMessageElement(msg) {
 function loadGame(gameCode) {
     console.log(gameCode);
     console.log(gameCode == null);
-    console.log(!(gameCode instanceof String));
-    if (!(gameCode instanceof String)) { //gamecode either blank (startgame) or already checked for validity (joingame)
+    console.log(gameCode instanceof MouseEvent);
+    
+    //if mouseEvent is passed through, then startGame was chosen so create new one
+    if (gameCode instanceof MouseEvent) { 
         gameCode = createGame();
     }
 
