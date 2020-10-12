@@ -148,7 +148,7 @@ function loadGame(gameCode) {
                     let score = scoreWord(word);
                     //add message
                     addFoundWordMessage(word,score);
-                    sesssionStorage.setItem("score", score + sessionStorage.getItem("score"));
+                    sessionStorage.setItem("score", score + sessionStorage.getItem("score"));
                 }
             });
         }
@@ -210,11 +210,11 @@ function addFoundWordMessage(word, score) {
     var messagesRef = firebase.database().ref("games/" + sessionStorage.getItem("currentGame") + "/messages");
     messagesRef.on("child_added", function(snapShot, prevChildKey) {
         console.log("MSG ADDED");
-        scoringLog.appendChild(createScoringMessageElement(snapShot.val()));
+        scoringLog.appendChild(createScoringMessageElement(snapShot.child("msg").val()));
     });
     messagesRef.push().set({
         "msg": `${sessionStorage.getItem("user")} found ${word} for ${score} points`
-    })
+    });
 } 
 
 function checkWordExists(word, board) {
