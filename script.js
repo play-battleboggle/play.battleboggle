@@ -138,18 +138,8 @@ function loadGame(gameCode) {
     displayGameCode(gameCode);
 
     //add update handler
-    firebase.database().ref("games/" + sessionStorage.getItem("currentGame") + "/board/{row}/{col}").on("value",(snapshot) => {
-        var cellId ="cell" + (row * rows + col);
-        var changedCell = document.getElementById(cellId);
-        document.getElementById(cellId).classList.add("fadeBlinkRed");
-
-        setTimeout(function() {
-            changedCell.classList.remove("fadeBlinkRed");
-        }, 2800);
-
-        firebase.database().ref("games/" + sessionStorage.getItem("currentGame")).once("value").then(function(snapshot) {
-            createDisplayBoard(snapshot.child("board").val());
-        });
+    firebase.database().ref("games/" + sessionStorage.getItem("currentGame") + "/board/{row}/{col}").on("child_changed",(snapshot) => {
+        createDisplayBoard(snapshot.child("board").val());
     });
 
     //save user as game player
