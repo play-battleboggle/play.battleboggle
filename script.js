@@ -88,7 +88,9 @@ function createDisplayBoard(board) {
 
 function createScoringLog(messagesRef) {
     document.getElementById("c1").innerHTML = "";
-    document.getElementById("c1").appendChild(document.createElement("h2").innerHTML = "Words Found");
+    var listTitle = document.createElement("h2");
+    listTitle.innerHTML = "Words Found";
+    document.getElementById("c1").appendChild(listTitle);
     
     scoringLog = document.createElement("ul");
     scoringLog.id = "scoringlog";
@@ -178,7 +180,9 @@ function loadGame(gameCode) {
 
 function loadLeaderBoard(usersRef) {
     document.getElementById("c2").innerHTML = "";
-    document.getElementById("c2").appendChild(document.createElement("h2").innerHTML = "Game Leaderboard");
+    var listTitle = document.createElement("h2");
+    listTitle.innerHTML = "Leaderboard";
+    document.getElementById("c2").appendChild(listTitle);
 
     var query = firebase.database().ref("games/" + sessionStorage.getItem("currentGame") + "/users").orderByKey();
     var leaderboard = document.createElement("ul");
