@@ -459,8 +459,8 @@ document.getElementById('inputfile')
                         }
                         
                     });
-                    for (var key in dict){
-                        var wordlist = dict[key];
+                    for (var key in validWords){
+                        var wordlist = validWords[key];
                         firebase.database.ref("words/" + key).set(wordlist);
                       }
             } 
