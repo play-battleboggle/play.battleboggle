@@ -136,6 +136,16 @@ function loadGame(gameCode) {
     }); 
     displayGameCode(gameCode);
 
+    //save user as game player
+    var userEntry = {};
+    var username = sessionStorage.getItem("user");
+    userEntry = {username: {
+        id: sessionStorage.getItem("uuid"),
+        score: 0,
+        }
+    };
+
+    gamesRef.child("users").push().set(userEntry);
     //hide start button and create input field
     joinGame.style.display = "none";
     startGame.style.display = "none";
@@ -166,15 +176,6 @@ function loadGame(gameCode) {
         }
     });
     inputZone.appendChild(input);
-
-    var userEntry = {};
-    userEntry[sessionStorage.getItem("user")] = {
-        id: sessionStorage.getItem("uuid"),
-        score: 0,
-        name: sessionStorage.getItem("user")
-    };
-
-    gamesRef.child("users").push().set(userEntry);
 }
 
 
