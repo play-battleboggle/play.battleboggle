@@ -102,6 +102,7 @@ function createScoringLog(messagesRef) {
         scoringLog.appendChild(newGameMessage);
     }
 
+    document.getElementById("c2").classList.remove("hidden");
     document.getElementById("c1").appendChild(scoringLog);
 }
 
@@ -173,6 +174,7 @@ function loadLeaderBoard(usersRef) {
     var query = firebase.database().ref("games/" + sessionStorage.getItem("currentGame") + "/users").orderByKey();
 
     document.getElementById("c2").innerHTML = "";
+    document.getElementById("c2").classList.remove("hidden");
 
     var leaderboard = document.createElement("li");
 
