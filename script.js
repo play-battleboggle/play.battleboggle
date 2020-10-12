@@ -88,6 +88,7 @@ function createDisplayBoard(board) {
 
 function createScoringLog(messagesRef) {
     scoringLog = document.createElement("ul");
+    scoringLog.innerHTML = "";
     scoringLog.id = "scoringlog";
     
     var counter = 0;
@@ -176,7 +177,7 @@ function loadLeaderBoard(usersRef) {
     document.getElementById("c2").innerHTML = "";
     document.getElementById("c2").classList.remove("hidden");
 
-    var leaderboard = document.createElement("li");
+    var leaderboard = document.createElement("ul");
 
     query.once("value").then(function(snapshot) {
         snapshot.forEach(function(childSnapshot) {
@@ -233,12 +234,12 @@ function addFoundWordMessage(word, score) {
     var messagesRef = firebase.database().ref("games/" + sessionStorage.getItem("currentGame") + "/messages");
 
     var newMsgRef = messagesRef.push();
+    var newmsg = `${sessionStorage.getItem("user")} found ${word} for ${score} points`
     newMsgRef.set({
-        "msg": `${sessionStorage.getItem("user")} found ${word} for ${score} points`
+        "msg": newmsg
     });
-    newMsgRef.once("value").then(function(snapshot) {
-        scoringLog.appendChild(createScoringMessageElement(snapshot.child("msg").val()));
-    });
+
+    document.getElementById("scoringlog").appendChild(createScoringMessageElement(newmsg));
     
 } 
 
