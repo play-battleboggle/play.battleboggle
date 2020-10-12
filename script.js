@@ -436,8 +436,14 @@ document.getElementById("usernameinput").addEventListener('keyup', function(e) {
         joinGame.classList.remove("hidden");
     }
 });
+ 
+///
+const fileUrl = 'data/words.txt' // provide file location
 
-
+fetch(fileUrl)
+   .then( r => r.text() )
+   .then( t => console.log(t) )
+/*
 //load words from txt file
 const reader = new FileReader();
 
@@ -458,4 +464,4 @@ reader.onerror = (event) => {
     alert(event.target.error.name);
 };
 
-reader.readAsText("data/words.txt");
+reader.readAsText("data/words.txt");*/
