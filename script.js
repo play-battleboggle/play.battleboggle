@@ -87,13 +87,11 @@ function createDisplayBoard(board) {
 }
 
 function createScoringLog(messagesRef) {
-
     var container1 = document.getElementById("c1");
     container1.innerHTML = "";
     container1.appendChild(document.createElement("h2").innerHTML = "Words Found");
 
     scoringLog = document.createElement("ul");
-    scoringLog.innerHTML = "";
     scoringLog.id = "scoringlog";
     
     var counter = 0;
@@ -178,18 +176,12 @@ function loadGame(gameCode) {
 
 
 function loadLeaderBoard(usersRef) {
-    var container2 = document.getElementById("c1");
+    var container2 = document.getElementById("c2");
     container2.innerHTML = "";
     container2.appendChild(document.createElement("h2").innerHTML = "Game Leaderboard");
 
-
     var query = firebase.database().ref("games/" + sessionStorage.getItem("currentGame") + "/users").orderByKey();
-
-    document.getElementById("c2").innerHTML = "";
-    document.getElementById("c2").classList.remove("hidden");
-
     var leaderboard = document.createElement("ul");
-
     query.once("value").then(function(snapshot) {
         snapshot.forEach(function(childSnapshot) {
             var username = childSnapshot.val()["name"];
@@ -201,7 +193,7 @@ function loadLeaderBoard(usersRef) {
         });
     });
 
-
+    container2.classList.remove("hidden");
     container2.appendChild(leaderboard);
 }
 
