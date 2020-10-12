@@ -219,7 +219,7 @@ function checkWordExists(word) {
     var gameRef = firebase.database().ref("games/" + sessionStorage.getItem("currentGame"));
     var board;
 
-    gameRef.once("value").then(board = function(snapshot) {
+    board = gameRef.once("value").then(function(snapshot) {
         return snapshot.child("board").val();
     }); 
 
