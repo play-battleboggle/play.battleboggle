@@ -446,7 +446,7 @@ fetch(fileURL)
   	// Do something with your data
   	console.log(data);
   });
-
+/*
 //load words from txt file
 const reader = new FileReader();
 
