@@ -447,33 +447,21 @@ document.getElementById('inputfile')
                 const file = event.target.result;
                     const allLines = file.split(/\r\n|\n/);
                     // Reading line by line
+                    console.log(allLines.length);
                     allLines.forEach((word) => {
                         if (word.length >= 3 && word.length <= 12) {
-                            if (!validWords[word[0]]) {
-                                validWords[word[0]] = {};
+                            if (!validWords[word.slice(0,3)]) {
+                                validWords[word.slice(0,3)] = {};
                             } 
 
-                            if (!validWords[word[0]][word[1]]) {
-                                validWords[word[0]][word[1]] = {};
-                            }
-
-                            if (!validWords[word[0]][word[1]][word[2]]) {
-                                validWords[word[0]][word[1]][word[2]] = [];
-                            }
-
-                            validWords[word[0]][word[1]][word[2]].push(word);
+                            validWords[word.slice(0,3)].push(word);
                             console.log(word);
                         }
                         
                     });
                     for (var key in dict){
                         var subdict = dict[key];
-                        for (var subkey in subdict) {
-                            var subsubdict = subdict[key];
-                            for (var subsubkey in subsubsdict) {
-                                firebase.database.ref(`words/${key}/${subkey}/${subsubkey}`).set(dict[key][subkey][subsubkey]);
-                            }
-                        }
+                        firebase.database.ref("words/" + key).set();
                       }
             } 
               
