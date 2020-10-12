@@ -229,7 +229,6 @@ function checkWordExists(word, board) {
     uniqueLetters = [...uniqueLetters].join('');
     
     //populate cellMap with all occurences of letters 
-    var board = snapshot.child("board").val();
     for (var i = 0; i < rows; i++) {
         for (var j = 0; j < cols; j++) {
             for (let letter of uniqueLetters) {
