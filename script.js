@@ -136,14 +136,17 @@ function loadGame(gameCode) {
             var word = this.value.toUpperCase();
             word = word.replace(/\s+/g, '');
             this.value = "";
-            var path = checkWordExists(word);
-            printPath(path);
-            if (isValidWord(word) && path.length != 0) {
-                shuffleCells(path);
-                let score = scoreWord(word);
-                addFoundWordMessage(word,score);
-            
-            }
+            var gameRef = firebase.database().ref("games/" + sessionStorage.getItem("currentGame"));
+            gameRef.once("value").then(function(snapshot) {
+                var path = checkWordExists(word, snapshot.child("board").val());
+                printPath(path);
+                if (isValidWord(word) && path.length != 0) {
+                    shuffleCells(path);
+                    let score = scoreWord(word);
+                    addFoundWordMessage(word,score);
+                
+                }
+            });
         }
     });
     inputZone.appendChild(input);
@@ -212,7 +215,7 @@ function addFoundWordMessage(word, score) {
 
 } 
 
-function checkWordExists(word) {
+function checkWordExists(word, board) {
     //check if word is in boggleboard
     //if so, track the cells it is in an return them in "path"
     var cellMap = {};
@@ -226,23 +229,21 @@ function checkWordExists(word) {
     uniqueLetters = [...uniqueLetters].join('');
     
     //populate cellMap with all occurences of letters 
-    var gameRef = firebase.database().ref("games/" + sessionStorage.getItem("currentGame"));
-    gameRef.once("value").then(function(snapshot) {
-        var board = snapshot.child("board").val();
-        for (var i = 0; i < rows; i++) {
-            for (var j = 0; j < cols; j++) {
-                for (let letter of uniqueLetters) {
-                    if (board[i][j] === letter) {
-                        if (!cellMap[letter]) {
-                            cellMap[letter] = [[i,j]];
-                    } else {
-                        cellMap[letter].push([i,j]);
-                    }
-                } 
-            }
-            }
+    var board = snapshot.child("board").val();
+    for (var i = 0; i < rows; i++) {
+        for (var j = 0; j < cols; j++) {
+            for (let letter of uniqueLetters) {
+                if (board[i][j] === letter) {
+                    if (!cellMap[letter]) {
+                        cellMap[letter] = [[i,j]];
+                } else {
+                    cellMap[letter].push([i,j]);
+                }
+            } 
         }
-    });
+        }
+    }
+
         
     
     var path = new Array();
