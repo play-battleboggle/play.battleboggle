@@ -209,13 +209,12 @@ firebase.database().ref("games/{foo}/messages").on("child_added", function(snaps
 function addFoundWordMessage(word, score) {
     var messagesRef = firebase.database().ref("games/" + sessionStorage.getItem("currentGame") + "/messages");
 
-    messagesRef.push().set({
+    var newMsgRef = messagesRef.push();
+    newMsgRef.set({
         "msg": `${sessionStorage.getItem("user")} found ${word} for ${score} points`
     });
+    scoringLog.appendChild(createScoringMessageElement(newMsgRef.child("msg").val()));
 } 
-firebase.database().ref("games/{foo}/messages").on("child_added", function(snapShot, prevChildKey) {
-    scoringLog.appendChild(createScoringMessageElement(snapShot.child("msg").val()));
-});
 
 function checkWordExists(word, board) {
     //check if word is in boggleboard
