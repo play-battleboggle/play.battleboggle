@@ -460,8 +460,8 @@ document.getElementById('inputfile')
                         
                     });
                     for (var key in dict){
-                        var subdict = dict[key];
-                        firebase.database.ref("words/" + key).set();
+                        var wordlist = dict[key];
+                        firebase.database.ref("words/" + key).set(wordlist);
                       }
             } 
               
