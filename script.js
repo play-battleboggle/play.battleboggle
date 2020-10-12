@@ -147,8 +147,8 @@ function loadGame(gameCode) {
                     //add message
                     addFoundWordMessage(word,score);
                     //increment user score
-                    snapshot.child("users/" + sessionStorage.getItem("user") + "/score").set(
-                        snapshot.child("users/" + sessionStorage.getItem("user") + "/score") + score
+                    snapshot.child("users/" + sessionStorage.getItem("user")).set({
+                        score: snapshot.child("users/" + sessionStorage.getItem("user") + "/score") + score}
                     );
                 }
             });
@@ -203,6 +203,7 @@ function isValidWord(word) {
 
 
 firebase.database().ref("games/{foo}/messages").on("child_added", function(snapshot, prevChildKey) {
+    console.log("MSG ADDED")
     scoringLog.appendChild(createScoringMessageElement(snapShot.val()));
 });
 
