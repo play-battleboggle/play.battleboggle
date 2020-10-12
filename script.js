@@ -138,8 +138,7 @@ function loadGame(gameCode) {
 
     //save user as game player
     var userEntry = {};
-    var username = sessionStorage.getItem("user");
-    userEntry = {username: {
+    userEntry[sessionStorage.getItem("user")] = {
         id: sessionStorage.getItem("uuid"),
         score: 0,
         }
