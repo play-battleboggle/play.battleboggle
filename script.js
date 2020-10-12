@@ -217,11 +217,14 @@ function checkWordExists(word) {
     //if so, track the cells it is in an return them in "path"
     var cellMap = {};
     var gameRef = firebase.database().ref("games/" + sessionStorage.getItem("currentGame"));
+    var board;
 
-    return gameRef.once("value").then(function(snapshot) {
-        var board = snapshot.child("board").val();
-            //remove duplicates from word or else cellMap gets populated per instance in board
-        var uniqueLetters = new Set();
+    gameRef.once("value").then(function(snapshot) {
+        board = snapshot.child("board").val();
+    }); 
+
+    //remove duplicates from word or else cellMap gets populated per instance in board
+    var uniqueLetters = new Set();
         for (let letter of word) {
             uniqueLetters.add(letter);
         }
@@ -261,8 +264,8 @@ function checkWordExists(word) {
                 break;
             }
         }
+        printPath(path);
         return path;  
-    }); 
 }
 
 function checkWordExists_helper(word, cellMap, path, letterIndex) {
