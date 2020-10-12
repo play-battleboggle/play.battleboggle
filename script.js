@@ -90,7 +90,7 @@ function createScoringLog(messagesRef) {
     var container1 = document.getElementById("c1");
     container1.innerHTML = "";
     container1.appendChild(document.createElement("h2").innerHTML = "Words Found");
-
+    
     scoringLog = document.createElement("ul");
     scoringLog.id = "scoringlog";
     
@@ -106,7 +106,9 @@ function createScoringLog(messagesRef) {
         scoringLog.appendChild(newGameMessage);
     }
 
+    console.log(container1.classList);
     container1.classList.remove("hidden");
+    console.log(container1.classList);
     container1.appendChild(scoringLog);
 }
 
