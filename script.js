@@ -138,7 +138,7 @@ function loadGame(gameCode) {
     displayGameCode(gameCode);
 
     //add update handler
-    firebase.database().ref("games/" + sessionStorage.getItem("currentGame") + "/board/{row}/{col}").onUpdate((change, context) => {
+    firebase.database().ref("games/" + sessionStorage.getItem("currentGame") + "/board/{row}/{col}").on("update",(change, context) => {
         var cellId ="cell" + (row * rows + col);
         var changedCell = document.getElementById(cellId);
         document.getElementById(cellId).classList.add("fadeBlinkRed");
