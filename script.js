@@ -98,7 +98,7 @@ function createScoringLog(messagesRef) {
     var counter = 0;
     if (messagesRef) {
         messagesRef.forEach(function(childSnapshot) {
-                scoringLog.appendChild(createScoringMessageElement(childSnapshot.val()));
+                scoringLog.appendChild(createScoringMessageElement(childSnapshot.val()["msg"]));
                 counter++;
         });
     } else {
@@ -118,10 +118,6 @@ function createScoringMessageElement(msg) {
 }
 
 function loadGame(gameCode) {
-    console.log(gameCode);
-    console.log(gameCode == null);
-    console.log(gameCode instanceof MouseEvent);
-    
     //if mouseEvent is passed through, then startGame was chosen so create new one
     if (gameCode instanceof MouseEvent) { 
         gameCode = createGame();
