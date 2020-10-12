@@ -218,8 +218,6 @@ function checkWordExists(word) {
   var gameRef = firebase.database().ref("games/" + sessionStorage.getItem("currentGame"));
 
   return gameRef.once("value").then(function(snapshot) {
-      console.log(sessionStorage.getItem("currentGame"));
-      console.log(sessionStorage.getItem("user"));
     var board = snapshot.child("board").val();
     console.log(board);
         //remove duplicates from word or else cellMap gets populated per instance in board
@@ -350,7 +348,7 @@ function shuffleCells(path) { //get new letters and make cells temporarily red
         cell.classList.add("fadeBlinkRed");
       }
       
-      firebase.database().ref("games/" + sessionStorage.getItem("currentGame"))["board"].set(board);
+      firebase.database().ref("games/" + sessionStorage.getItem("currentGame" + "/board")).set(board);
 
       setTimeout(function() {
         for (var i = 0; i < path.length; i++) {
