@@ -156,7 +156,7 @@ function createNewGame() {
     "users": new Array(),
     "messages": new Array(),
     "id": Math.floor(Math.random() * 100000000),
-    "max lobby": 5
+    "max lobby": 5,
     "players": new Array()
   };  
   
