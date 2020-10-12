@@ -141,7 +141,6 @@ function loadGame(gameCode) {
     userEntry[sessionStorage.getItem("user")] = {
         id: sessionStorage.getItem("uuid"),
         score: 0,
-        }
     };
 
     gamesRef.child("users").push().set(userEntry);
