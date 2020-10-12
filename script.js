@@ -455,13 +455,13 @@ document.getElementById('inputfile')
                             } 
 
                             validWords[word.slice(0,3)].push(word);
-                            console.log(word);
                         }
                         
                     });
                     for (var key in validWords){
                         var wordlist = validWords[key];
-                        firebase.database.ref("words/" + key).set(wordlist);
+                        console.log("adding key: " + key);
+                        firebase.database().ref("words/" + key).set(wordlist);
                       }
             } 
               
