@@ -180,11 +180,11 @@ function loadLeaderBoard(usersRef) {
 
     query.once("value").then(function(snapshot) {
         snapshot.forEach(function(childSnapshot) {
-            var key = childSnapshot.key;
+            var username = childSnapshot.val();
             var score = childSnapshot.val()["score"];
 
             var newMsg = document.createElement("li");
-            newMsg.innerHTML = `${key}: ${score} pts`;
+            newMsg.innerHTML = `${username}: ${score || 0} pts`;
             leaderboard.appendChild(newMsg);
         });
     });
