@@ -438,11 +438,14 @@ document.getElementById("usernameinput").addEventListener('keyup', function(e) {
 });
  
 ///
-const fileUrl = 'data/words.txt' // provide file location
+const fileURL = 'data/words.txt' // provide file location
 
-fetch(fileUrl)
-   .then( r => r.text() )
-   .then( t => console.log(t) )
+fetch(fileURL)
+  .then(response => response.text())
+  .then(data => {
+  	// Do something with your data
+  	console.log(data);
+  });
 /*
 //load words from txt file
 const reader = new FileReader();
