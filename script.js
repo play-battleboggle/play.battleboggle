@@ -437,17 +437,10 @@ document.getElementById("usernameinput").addEventListener('keyup', function(e) {
     }
 });
  
-///
-const fileURL = 'words.txt'; 
 
-fetch(fileURL)
-  .then(response => response.text())
-  .then(data => {
-  	// Do something with your data
-  	console.log(data);
-  });
-/*
 //load words from txt file
+document.getElementById('inputfile') 
+            .addEventListener('change', function() { 
 const reader = new FileReader();
 
 reader.onload = (event) => {
@@ -467,4 +460,5 @@ reader.onerror = (event) => {
     alert(event.target.error.name);
 };
 
-reader.readAsText("data/words.txt");*/
+reader.readAsText("data/words.txt");
+}
