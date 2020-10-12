@@ -453,11 +453,11 @@ document.getElementById('inputfile')
                                 validWords[word[0]] = {};
                             } 
 
-                            if (validWords[word[0]][word[1]]) {
+                            if (!validWords[word[0]][word[1]]) {
                                 validWords[word[0]][word[1]] = {};
                             }
 
-                            if (validWords[word[0]][word[1]][word[2]]) {
+                            if (!validWords[word[0]][word[1]][word[2]]) {
                                 validWords[word[0]][word[1]][word[2]] = [];
                             }
 
