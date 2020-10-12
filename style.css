@@ -79,3 +79,7 @@ table {
   .hidden {
       display: none
   }
+
+  #joinGameInputCode {
+      width: 250px
+  }
