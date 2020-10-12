@@ -451,7 +451,7 @@ document.getElementById('inputfile')
                         if (!validWords[word[0]]) {
                             validWords[word[0]] = [];
                         } 
-                        validWords[word[0]].append(word);
+                        validWords[word[0]].push(word);
                         console.log(word);
                     });
 
