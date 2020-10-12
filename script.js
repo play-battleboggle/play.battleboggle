@@ -217,12 +217,14 @@ function checkWordExists(word) {
     //if so, track the cells it is in an return them in "path"
     var cellMap = {};
     var gameRef = firebase.database().ref("games/" + sessionStorage.getItem("currentGame"));
-    var board;
+    var grab_db = {};
 
     gameRef.once("value").then(function(snapshot) {
-        boardDB = snapshot.child("board").val();
-        console.log(snapshot.child("board").val())
+        grab_db["board"] = snapshot.child("board").val();
     }); 
+
+    var board = grab_db["board"];
+    console.log(board);
 
     //remove duplicates from word or else cellMap gets populated per instance in board
     var uniqueLetters = new Set();
