@@ -448,11 +448,23 @@ document.getElementById('inputfile')
                     const allLines = file.split(/\r\n|\n/);
                     // Reading line by line
                     allLines.forEach((word) => {
-                        if (!validWords[word[0]]) {
-                            validWords[word[0]] = [];
-                        } 
-                        validWords[word[0]].push(word);
-                        console.log(word);
+                        if (word.length >= 3 && word.length <= 12) {
+                            if (!validWords[word[0]]) {
+                                validWords[word[0]] = {};
+                            } 
+
+                            if (validWords[word[0]][word[1]]) {
+                                validWords[word[0]][word[1]] = {};
+                            }
+
+                            if (validWords[word[0]][word[1]][word[2]]) {
+                                validWords[word[0]][word[1]][word[2]] = [];
+                            }
+                            
+                            validWords[word[0]][word[1]][word[2]].push(word);
+                            console.log(word);
+                        }
+                        
                     });
 
                     firebase.database().ref("words").set(validWords);
