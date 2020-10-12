@@ -373,6 +373,7 @@ joinGame.addEventListener('click', function(button) {
   inputZone.appendChild(joinGameInput);
 });
 
+alert("IS WORKING")
 
 
 
