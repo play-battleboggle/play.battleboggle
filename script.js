@@ -213,7 +213,10 @@ function addFoundWordMessage(word, score) {
     newMsgRef.set({
         "msg": `${sessionStorage.getItem("user")} found ${word} for ${score} points`
     });
-    scoringLog.appendChild(createScoringMessageElement(newMsgRef.child("msg").val()));
+    newMsgRef.once("value").then(function(snapshot) {
+        scoringLog.appendChild(createScoringMessageElement(snapshot.child("msg").val()));
+    });
+    
 } 
 
 function checkWordExists(word, board) {
