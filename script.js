@@ -87,6 +87,11 @@ function createDisplayBoard(board) {
 }
 
 function createScoringLog(messagesRef) {
+
+    var container1 = document.getElementById("c1");
+    container1.innerHTML = "";
+    container1.appendChild(document.createElement("h2").innerHTML = "Words Found");
+
     scoringLog = document.createElement("ul");
     scoringLog.innerHTML = "";
     scoringLog.id = "scoringlog";
@@ -103,8 +108,8 @@ function createScoringLog(messagesRef) {
         scoringLog.appendChild(newGameMessage);
     }
 
-    document.getElementById("c1").classList.remove("hidden");
-    document.getElementById("c1").appendChild(scoringLog);
+    container1.classList.remove("hidden");
+    container1.appendChild(scoringLog);
 }
 
 function createScoringMessageElement(msg) {
@@ -173,6 +178,11 @@ function loadGame(gameCode) {
 
 
 function loadLeaderBoard(usersRef) {
+    var container2 = document.getElementById("c1");
+    container2.innerHTML = "";
+    container2.appendChild(document.createElement("h2").innerHTML = "Game Leaderboard");
+
+
     var query = firebase.database().ref("games/" + sessionStorage.getItem("currentGame") + "/users").orderByKey();
 
     document.getElementById("c2").innerHTML = "";
@@ -190,7 +200,9 @@ function loadLeaderBoard(usersRef) {
             leaderboard.appendChild(newMsg);
         });
     });
-    document.getElementById("c2").appendChild(leaderboard);
+
+
+    container2.appendChild(leaderboard);
 }
 
 
