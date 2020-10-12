@@ -120,6 +120,8 @@ function createScoringMessageElement(msg) {
 }
 
 function loadGame(gameCode) {
+    console.log(gameCode);
+    console.log(gameCode == null);
     if (!(gameCode instanceof String)) { //gamecode either blank (startgame) or already checked for validity (joingame)
         gameCode = createGame();
     }
@@ -196,8 +198,6 @@ function loadLeaderBoard(usersRef) {
     document.getElementById("c2").classList.remove("hidden");
     document.getElementById("c2").appendChild(leaderboard);
 }
-
-
 
 function displayGameCode(gameCode) {
   var gameCodeLabel = document.createElement("h2");
