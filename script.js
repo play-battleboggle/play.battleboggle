@@ -103,7 +103,7 @@ function createScoringLog(messagesRef) {
         scoringLog.appendChild(newGameMessage);
     }
 
-    document.getElementById("c2").classList.remove("hidden");
+    document.getElementById("c1").classList.remove("hidden");
     document.getElementById("c1").appendChild(scoringLog);
 }
 
@@ -164,7 +164,8 @@ function loadGame(gameCode) {
     var userEntry = {};
     userEntry[sessionStorage.getItem("user")] = {
         id: sessionStorage.getItem("uuid"),
-        score: 0
+        score: 0,
+        name: sessionStorage.getItem("user")
     };
 
     gamesRef.child("users").push().set(userEntry);
@@ -181,7 +182,7 @@ function loadLeaderBoard(usersRef) {
 
     query.once("value").then(function(snapshot) {
         snapshot.forEach(function(childSnapshot) {
-            var username = childSnapshot.val().key;
+            var username = childSnapshot.val()["name"];
             var score = childSnapshot.val()["score"];
 
             var newMsg = document.createElement("li");
