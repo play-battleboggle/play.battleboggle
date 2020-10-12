@@ -121,6 +121,7 @@ function loadGame(gameCode) {
          //LOAD EVERYTHING!!!
         createDisplayBoard(snapshot.child("board").val());
         createScoringLog(snapshot.child("messages") || null);
+        //createLeaderboard(snapshot.child("users"));
     }); 
     displayGameCode(gameCode);
 
@@ -143,18 +144,25 @@ function loadGame(gameCode) {
                 if (isValidWord(word) && path.length != 0) {
                     shuffleCells(path);
                     let score = scoreWord(word);
+                    //add message
                     addFoundWordMessage(word,score);
-                
+                    //increment user score
+                    snapshot.child("users/" + sessionStorage.getItem("user") + "/score").set(
+                        snapshot.child("users/" + sessionStorage.getItem("user") + "/score") + score
+                    );
                 }
             });
         }
     });
     inputZone.appendChild(input);
 
-    gamesRef.child("users").push().set({
-        user: sessionStorage.getItem("user"),
-        id: sessionStorage.getItem("uuid")
-    });
+    var userEntry = {};
+    userEntry[sessionStorage.getItem("user")] = {
+        id: sessionStorage.getItem("uuid"),
+        score: 0
+    };
+
+    gamesRef.child("users").push().set(userEntry);
 }
 
 function displayGameCode(gameCode) {
@@ -201,18 +209,8 @@ firebase.database().ref("games/{foo}/messages").on("child_added", function(snaps
 function addFoundWordMessage(word, score) {
     var messagesRef = firebase.database().ref("games/" + sessionStorage.getItem("currentGame") + "/messages");
     messagesRef.push().set({
-        "msg": `${word} was found for ${score} points`
+        "msg": `${sessionStorage.getItem("user")} found ${word} for ${score} points`
     })
-
-  var newMsg = document.createElement("li");
-  newMsg.innerHTML = `${word} was found for ${score} points`;
-  
-  scoringLog.appendChild(newMsg);
-  var msgs = scoringLog.getElementsByTagName("li");
-  if (msgs.length >= 10) {
-    msgs = msgs.slice(1,11);
-  }
-
 } 
 
 function checkWordExists(word, board) {
@@ -295,6 +293,8 @@ function checkWordExists_helper(word, cellMap, path, letterIndex) {
   return path;
   
 }
+
+
 
 function printPath(path) {
   console.log("PATH PRINT: [")
