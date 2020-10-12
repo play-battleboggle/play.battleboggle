@@ -87,9 +87,8 @@ function createDisplayBoard(board) {
 }
 
 function createScoringLog(messagesRef) {
-    var container1 = document.getElementById("c1");
-    container1.innerHTML = "";
-    container1.appendChild(document.createElement("h2").innerHTML = "Words Found");
+    document.getElementById("c1").innerHTML = "";
+    document.getElementById("c1").appendChild(document.createElement("h2").innerHTML = "Words Found");
     
     scoringLog = document.createElement("ul");
     scoringLog.id = "scoringlog";
@@ -106,10 +105,10 @@ function createScoringLog(messagesRef) {
         scoringLog.appendChild(newGameMessage);
     }
 
-    console.log(container1.classList);
-    container1.classList.remove("hidden");
-    console.log(container1.classList);
-    container1.appendChild(scoringLog);
+    console.log(document.getElementById("c1").classList);
+    document.getElementById("c1").classList.remove("hidden");
+    console.log(document.getElementById("c1").classList);
+    document.getElementById("c1").appendChild(scoringLog);
 }
 
 function createScoringMessageElement(msg) {
@@ -178,9 +177,8 @@ function loadGame(gameCode) {
 
 
 function loadLeaderBoard(usersRef) {
-    var container2 = document.getElementById("c2");
-    container2.innerHTML = "";
-    container2.appendChild(document.createElement("h2").innerHTML = "Game Leaderboard");
+    document.getElementById("c2").innerHTML = "";
+    document.getElementById("c2").appendChild(document.createElement("h2").innerHTML = "Game Leaderboard");
 
     var query = firebase.database().ref("games/" + sessionStorage.getItem("currentGame") + "/users").orderByKey();
     var leaderboard = document.createElement("ul");
@@ -195,8 +193,8 @@ function loadLeaderBoard(usersRef) {
         });
     });
 
-    container2.classList.remove("hidden");
-    container2.appendChild(leaderboard);
+    document.getElementById("c2").classList.remove("hidden");
+    document.getElementById("c2").appendChild(leaderboard);
 }
 
 
