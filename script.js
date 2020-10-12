@@ -215,52 +215,53 @@ function checkWordExists(word) {
   var cellMap = {};
   var gameRef = firebase.database().ref("games/" + sessionStorage.getItem("user")["currentGame"]);
   var board;
-  gameRef.once("value").then(function(snapshot) {
+  return gameRef.once("value").then(function(snapshot) {
     board = snapshot.child("board").val();
+        //remove duplicates from word or else cellMap gets populated per instance in board
+    var uniqueLetters = new Set();
+    for (let letter of word) {
+        uniqueLetters.add(letter);
+    }
+    uniqueLetters = [...uniqueLetters].join('');
+    
+    //populate cellMap with all occurences of letters 
+    for (var i = 0; i < rows; i++) {
+        for (var j = 0; j < cols; j++) {
+            for (let letter of uniqueLetters) {
+                if (board[i][j] === letter) {
+                    if (!cellMap[letter]) {
+                        cellMap[letter] = [[i,j]];
+                } else {
+                    cellMap[letter].push([i,j]);
+                }
+            } 
+        }
+        }
+    }
+        
+    
+    var path = new Array();
+    for (let letter of word) { //if one of the letters is not in board, return no path
+        if (!cellMap[letter]) {
+            return path
+        }
+    }
+    
+    var r,c;
+    for (var i = 0; i < cellMap[word[0]].length; i++) {
+        [r,c] = cellMap[word[0]][i];
+        path.push(new Array(r,c));
+        path = checkWordExists_helper(word, cellMap, path, 1);
+        if (path.length != word.length ) {
+            path.pop();
+        } else {
+            break;
+        }
+    }
+    return path;  
   }); 
 
-  //remove duplicates from word or else cellMap gets populated per instance in board
-  var uniqueLetters = new Set();
-  for (let letter of word) {
-    uniqueLetters.add(letter);
-  }
-  uniqueLetters = [...uniqueLetters].join('');
   
-  //populate cellMap with all occurences of letters 
-  for (var i = 0; i < rows; i++) {
-    for (var j = 0; j < cols; j++) {
-      for (let letter of uniqueLetters) {
-        if (board[i][j] === letter) {
-          if (!cellMap[letter]) {
-            cellMap[letter] = [[i,j]];
-          } else {
-            cellMap[letter].push([i,j]);
-          }
-        } 
-      }
-    }
-  }
-     
-  
-  var path = new Array();
-  for (let letter of word) { //if one of the letters is not in board, return no path
-    if (!cellMap[letter]) {
-      return path
-    }
-  }
-  
-  var r,c;
-  for (var i = 0; i < cellMap[word[0]].length; i++) {
-    [r,c] = cellMap[word[0]][i];
-    path.push(new Array(r,c));
-    path = checkWordExists_helper(word, cellMap, path, 1);
-    if (path.length != word.length ) {
-      path.pop();
-    } else {
-      break;
-    }
-  }
-  return path;  
 }
 
 function checkWordExists_helper(word, cellMap, path, letterIndex) {
