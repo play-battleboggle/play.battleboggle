@@ -216,21 +216,19 @@ function checkWordExists(word) {
     //check if word is in boggleboard
     //if so, track the cells it is in an return them in "path"
     var cellMap = {};
-    var gameRef = firebase.database().ref("games/" + sessionStorage.getItem("currentGame"));
-    var board;
-
-    board = gameRef.once("value").then(function(snapshot) {
-        return snapshot.child("board").val();
-    }); 
+    
 
     //remove duplicates from word or else cellMap gets populated per instance in board
     var uniqueLetters = new Set();
-        for (let letter of word) {
-            uniqueLetters.add(letter);
-        }
-        uniqueLetters = [...uniqueLetters].join('');
-        
-        //populate cellMap with all occurences of letters 
+    for (let letter of word) {
+        uniqueLetters.add(letter);
+    }
+    uniqueLetters = [...uniqueLetters].join('');
+    
+    //populate cellMap with all occurences of letters 
+    var gameRef = firebase.database().ref("games/" + sessionStorage.getItem("currentGame"));
+    gameRef.once("value").then(function(snapshot) {
+        var board = snapshot.child("board").val();
         for (var i = 0; i < rows; i++) {
             for (var j = 0; j < cols; j++) {
                 for (let letter of uniqueLetters) {
@@ -244,28 +242,29 @@ function checkWordExists(word) {
             }
             }
         }
-            
+    });
         
-        var path = new Array();
-        for (let letter of word) { //if one of the letters is not in board, return no path
-            if (!cellMap[letter]) {
-                return path
-            }
+    
+    var path = new Array();
+    for (let letter of word) { //if one of the letters is not in board, return no path
+        if (!cellMap[letter]) {
+            return path
         }
-        
-        var r,c;
-        for (var i = 0; i < cellMap[word[0]].length; i++) {
-            [r,c] = cellMap[word[0]][i];
-            path.push(new Array(r,c));
-            path = checkWordExists_helper(word, cellMap, path, 1);
-            if (path.length != word.length ) {
-                path.pop();
-            } else {
-                break;
-            }
+    }
+    
+    var r,c;
+    for (var i = 0; i < cellMap[word[0]].length; i++) {
+        [r,c] = cellMap[word[0]][i];
+        path.push(new Array(r,c));
+        path = checkWordExists_helper(word, cellMap, path, 1);
+        if (path.length != word.length ) {
+            path.pop();
+        } else {
+            break;
         }
-        printPath(path);
-        return path;  
+    }
+    printPath(path);
+    return path;  
 }
 
 function checkWordExists_helper(word, cellMap, path, letterIndex) {
