@@ -160,7 +160,7 @@ function loadGame(gameCode) {
                     shuffleCells(path);
                     //increment score for user
                     let score = scoreWord(word);
-                    firebase.database().ref("games/" + sessionStorage.getItem("currentGame") + "/users/{}/" + sessionStorage.getItem("user")).set(firebase.database.ServerValue.increment(score));
+                    firebase.database().ref("games/" + sessionStorage.getItem("currentGame") + "/users/" + sessionStorage.getItem("user") + "/score").set(firebase.database.ServerValue.increment(score));
                     //add message
                     addFoundWordMessage(word,score);
                     loadLeaderBoard(snapshot.child("users"));
@@ -184,7 +184,7 @@ function loadLeaderBoard(usersRef) {
     var leaderboard = document.createElement("ul");
     query.once("value").then(function(snapshot) {
         snapshot.forEach(function(childSnapshot) {
-            var username = childSnapshot.val()["name"];
+            var username = childSnapshot.key;
             var score = childSnapshot.val()["score"];
 
             var newMsg = document.createElement("li");
