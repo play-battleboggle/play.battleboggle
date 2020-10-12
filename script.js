@@ -458,4 +458,4 @@ reader.onerror = (event) => {
     alert(event.target.error.name);
 };
 
-reader.readAsText(file);
+reader.readAsText("data/words.txt");
