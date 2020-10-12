@@ -395,8 +395,8 @@ document.getElementById("usernameinput").addEventListener('keyup', function(e) {
         
         //hide stuff and show stuff
         document.getElementById("usernameinput").classList.add("hidden");
-        startGame.classList.removeClass("hidden");
-        joinGame.classList.removeClass("hidden");
+        startGame.classList.remove("hidden");
+        joinGame.classList.remove("hidden");
     }
 });
 
