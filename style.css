@@ -1,0 +1,77 @@
+table {
+    border: 1px solid black;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  ul {
+    boder-style: solid;
+    border: 1px solid #000;
+    padding: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    background: rgba(0,0,255,0.25);
+    height: 200px;
+    width: 500px;
+  }
+  
+  li {
+    width: 500px;
+    height: 20px;
+    text-align: center;
+    list-style-type: none;
+    max-height:400px;
+    overflow-y:auto;
+    overflow-x:hidden;
+  }
+  
+  tr, td {
+    text-align: center;
+    width: 50px;
+    height: 50px;
+    font-type: bold;
+  }
+  
+  button {
+    width: 100px;
+    height: 25px; 
+  }
+  
+  #inputzone, #messagezone {
+    text-align: center;  
+  }
+  
+  h1 {
+    text-align: center;
+    color: blue;
+    font-size: 60px;
+    font-weight: bold;
+  }
+  
+  h2 {
+    text-align: center;
+    color: black;
+    font-size: 30px;
+    font-weight: bold;
+  }
+  
+  div {
+    padding: 10px;
+  }
+  
+  @-o-keyframes fadeIt {
+    0%   { background-color: #FFFFFF; }
+    50%  { background-color: #AD301B; }
+    100% { background-color: #FFFFFF; }
+  }
+  @keyframes fadeIt {
+    0%   { background-color: #FFFFFF; }
+    50%  { background-color: #AD301B; }
+    100% { background-color: #FFFFFF; }
+  }
+  
+  .fadeBlinkRed{    
+      background-image:none !important; 
+           -o-animation: fadeIt 2s ease-in-out; 
+              animation: fadeIt 2s ease-in-out; 
+  }
