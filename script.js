@@ -107,9 +107,7 @@ function createScoringLog(messagesRef) {
         scoringLog.appendChild(newGameMessage);
     }
 
-    console.log(document.getElementById("c1").classList);
     document.getElementById("c1").classList.remove("hidden");
-    console.log(document.getElementById("c1").classList);
     document.getElementById("c1").appendChild(scoringLog);
 }
 
@@ -122,6 +120,7 @@ function createScoringMessageElement(msg) {
 function loadGame(gameCode) {
     console.log(gameCode);
     console.log(gameCode == null);
+    console.log(!(gameCode instanceof String));
     if (!(gameCode instanceof String)) { //gamecode either blank (startgame) or already checked for validity (joingame)
         gameCode = createGame();
     }
