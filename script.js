@@ -162,6 +162,8 @@ function loadGame(gameCode) {
             var gameRef = firebase.database().ref("games/" + sessionStorage.getItem("currentGame"));
             gameRef.once("value").then(function(snapshot) {
                 var path = checkWordExists(word, snapshot.child("board").val());
+                console.log(word);
+                console.log(isValidWord(word));
                 if (isValidWord(word) && path.length != 0) {
                     shuffleCells(path);
                     //increment score for user
@@ -236,7 +238,9 @@ function scoreWord(word) {
 }
 
 function isValidWord(word) {
-  return true;
+  return firebase.database().ref("words").child(word.slice(0,3)).once("value").then(function(snapshot) {
+        return snapshot.exists && snapshot.val().includes(word);
+  });
 }
 
 function addFoundWordMessage(word, score) {
@@ -438,6 +442,9 @@ document.getElementById("usernameinput").addEventListener('keyup', function(e) {
 });
  
 
+
+//code to upload words to firebase (didnt feel like deleting)
+/*
 //load words from txt file
 document.getElementById('inputfile') 
             .addEventListener('change', function() { 
@@ -466,4 +473,4 @@ document.getElementById('inputfile')
             } 
               
             fr.readAsText(this.files[0]); 
-        }) 
+        }) */
