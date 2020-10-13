@@ -176,7 +176,6 @@ function loadGame(gameCode) {
                         loadLeaderBoard(snapshot.child("users"));
                     }
                 });
-                console.log(isValidWord, word);
             });
         }
     });
