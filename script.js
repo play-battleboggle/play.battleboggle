@@ -238,9 +238,9 @@ function scoreWord(word) {
 }
 
 function isValidWord(word) {
-  return firebase.database().ref("words").child(word.slice(0,3)).once("value").then(function(snapshot) {
+  return firebase.database().ref("words").child(word.slice(0,3).toLowerCase()).once("value").then(function(snapshot) {
       console.log(word, word.slice(0,3), snapshot.exists(), snapshot.val());
-        return snapshot.exists() && snapshot.val().includes(word);
+        return snapshot.exists() && snapshot.val().includes(word.toLowerCase());
   });
 }
 
