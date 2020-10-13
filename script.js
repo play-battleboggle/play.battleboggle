@@ -162,12 +162,13 @@ function loadGame(gameCode) {
             var gameRef = firebase.database().ref("games/" + sessionStorage.getItem("currentGame"));
             gameRef.once("value").then(function(snapshot) {
                 var path = checkWordExists(word, snapshot.child("board").val());
-                
+
                 var isValidWord;
                 firebase.database().ref("words").child(word.slice(0,3).toLowerCase()).once("value").then(function(snapshot) {
                     console.log(word, word.slice(0,3), snapshot.exists(), snapshot.val());
                     isValidWord = snapshot.exists() && snapshot.val().includes(word.toLowerCase());
                 });
+                console.log(isValidWord, word);
                 if (isValidWord && path.length != 0) {
                     shuffleCells(path);
                     //increment score for user
