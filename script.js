@@ -239,7 +239,8 @@ function scoreWord(word) {
 
 function isValidWord(word) {
   return firebase.database().ref("words").child(word.slice(0,3)).once("value").then(function(snapshot) {
-        return snapshot.exists && snapshot.val().includes(word);
+      console.log(word, word.slice(0,3), snapshot.exists(), snapshot.val());
+        return snapshot.exists() && snapshot.val().includes(word);
   });
 }
 
